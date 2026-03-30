@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "esbenp.prettier-vscode",
+    "dsznajder.es7-react-js-snippets",
+    "GitHub.copilot",
+    "anthropics.claude-dev"
+  ]
+}

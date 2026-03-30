@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #c4956a;
+  --color-primary-light: #e8c9a8;
+  --color-primary-dark: #a07348;
+  --color-secondary: #f2d0c5;
+  --color-secondary-light: #faebe7;
+  --color-secondary-dark: #d4a99c;
+  --color-accent: #b58574;
+  --color-background: #fef9f7;
+  --color-surface: #fff5f0;
+  --color-text: #5a4a42;
+  --color-text-light: #8a7a72;
+  --color-heading: #aa9083;
+  --color-border: #e8d5cc;
+  --color-whatsapp: #25d366;
+
+  --font-heading: "Julius Sans One", sans-serif;
+  --font-body: "Poppins", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-heading);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Swiper custom */
+.swiper-button-next,
+.swiper-button-prev {
+  color: var(--color-primary) !important;
+  background: white;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 16px !important;
+  font-weight: bold;
+}
+.swiper-pagination-bullet-active {
+  background: var(--color-primary) !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* Animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}
