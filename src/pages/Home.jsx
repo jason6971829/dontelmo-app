@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
@@ -6,11 +7,15 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Star, ChevronRight } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-import { PRODUCTS, CATEGORIES, TESTIMONIALS } from "../data/products";
-
-const featured = PRODUCTS.filter((p) => p.featured);
+import { TESTIMONIALS } from "../data/products";
+import { useProducts, useCategories } from "../hooks/useSupabase";
 
 export default function Home() {
+  const { products, loading: loadingProducts } = useProducts();
+  const { categories, loading: loadingCategories } = useCategories();
+
+  const featured = useMemo(() => products.filter((p) => p.featured), [products]);
+
   return (
     <div>
       {/* Hero */}
@@ -44,8 +49,16 @@ export default function Home() {
           </div>
           <div className="flex-1 relative">
             <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
-              <img src="https://images.unsplash.com/photo-1487530811176-3780de880c2d?w=400" alt="Flores" className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover" />
-              <img src="https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400" alt="Globos" className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover mt-8" />
+              <img
+                src="/catalog-images/page_011.jpg"
+                alt="Arreglo floral"
+                className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover object-top"
+              />
+              <img
+                src="/catalog-images/page_031.jpg"
+                alt="Desayuno sorpresa"
+                className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover object-top mt-8"
+              />
             </div>
           </div>
         </div>
@@ -60,26 +73,35 @@ export default function Home() {
       {/* Categories */}
       <section className="max-w-7xl mx-auto px-4 py-16 sm:py-20">
         <h2 className="text-center text-xl sm:text-2xl mb-10">Nuestras Categorias</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.id}
-              to={`/tienda/${cat.id}`}
-              className="group relative rounded-2xl overflow-hidden aspect-square"
-            >
-              <img
-                src={cat.image}
-                alt={cat.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
-                <span className="text-2xl mb-1 block">{cat.emoji}</span>
-                <span className="font-heading text-[11px] text-white tracking-[0.15em] uppercase">{cat.name}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        {loadingCategories ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="rounded-2xl aspect-square bg-secondary-light animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                to={`/tienda/${cat.slug || cat.id}`}
+                className="group relative rounded-2xl overflow-hidden aspect-square"
+              >
+                <img
+                  src={cat.image}
+                  alt={cat.name}
+                  className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700"
+                  onError={(e) => { e.target.style.display = "none"; }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-4 text-center">
+                  <span className="text-2xl mb-1 block">{cat.emoji}</span>
+                  <span className="font-heading text-[11px] text-white tracking-[0.15em] uppercase">{cat.name}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Featured Products Carousel */}
@@ -87,26 +109,34 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4">
           <h2 className="text-center text-xl sm:text-2xl mb-3">Los Detalles Mas Lindos</h2>
           <p className="text-center text-text-light text-sm mb-10">de Bogota</p>
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={20}
-            slidesPerView={1.2}
-            navigation
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            breakpoints={{
-              480: { slidesPerView: 2 },
-              768: { slidesPerView: 3 },
-              1024: { slidesPerView: 4 },
-            }}
-            className="pb-12"
-          >
-            {featured.map((product) => (
-              <SwiperSlide key={product.id}>
-                <ProductCard product={product} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {loadingProducts ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="rounded-2xl h-72 bg-secondary-light animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={20}
+              slidesPerView={1.2}
+              navigation
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 4000, disableOnInteraction: false }}
+              breakpoints={{
+                480: { slidesPerView: 2 },
+                768: { slidesPerView: 3 },
+                1024: { slidesPerView: 4 },
+              }}
+              className="pb-12"
+            >
+              {featured.map((product) => (
+                <SwiperSlide key={product.id}>
+                  <ProductCard product={product} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </section>
 
@@ -115,9 +145,9 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
           <div className="flex-1">
             <img
-              src="https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=600"
+              src="/catalog-images/page_016.jpg"
               alt="Ramos de rosas"
-              className="rounded-2xl shadow-lg w-full max-w-md mx-auto"
+              className="rounded-2xl shadow-lg w-full max-w-md mx-auto object-cover object-top"
             />
           </div>
           <div className="flex-1 text-center lg:text-left">
@@ -133,6 +163,33 @@ export default function Home() {
               className="inline-flex items-center gap-2 px-6 py-3 border border-primary/30 text-primary font-heading text-[11px] tracking-[0.15em] uppercase rounded-full hover:bg-primary hover:text-white transition-all"
             >
               Ver Flores <ChevronRight size={14} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Second Feature - Desayunos */}
+      <section className="max-w-7xl mx-auto px-4 pb-16 sm:pb-20">
+        <div className="flex flex-col lg:flex-row-reverse items-center gap-10 lg:gap-16">
+          <div className="flex-1">
+            <img
+              src="/catalog-images/page_041.jpg"
+              alt="Desayuno Luxury"
+              className="rounded-2xl shadow-lg w-full max-w-md mx-auto object-cover object-top"
+            />
+          </div>
+          <div className="flex-1 text-center lg:text-left">
+            <p className="font-heading text-xs tracking-[0.2em] text-accent mb-2 uppercase">Lo mas pedido</p>
+            <h2 className="text-2xl sm:text-3xl mb-4">Desayunos Sorpresa</h2>
+            <p className="text-text-light text-sm leading-relaxed mb-6 font-light max-w-md mx-auto lg:mx-0">
+              Sorprende a esa persona especial con un desayuno lleno de amor.
+              Incluye opciones clasicas, luxury y personalizadas para cada ocasion.
+            </p>
+            <Link
+              to="/tienda/desayunos-sorpresa"
+              className="inline-flex items-center gap-2 px-6 py-3 border border-primary/30 text-primary font-heading text-[11px] tracking-[0.15em] uppercase rounded-full hover:bg-primary hover:text-white transition-all"
+            >
+              Ver Desayunos <ChevronRight size={14} />
             </Link>
           </div>
         </div>
@@ -166,9 +223,9 @@ export default function Home() {
       <section className="relative py-20 sm:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=1200"
+            src="/catalog-images/page_026.jpg"
             alt="Sorprende"
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-top"
           />
           <div className="absolute inset-0 bg-black/50" />
         </div>
