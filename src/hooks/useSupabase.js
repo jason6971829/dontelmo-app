@@ -27,6 +27,7 @@ export function useProducts(categorySlug = null) {
       query = query.eq("categories.slug", categorySlug);
     }
     const { data, error } = await query;
+    console.log("Supabase products response:", { data, error });
     if (error) {
       console.error("Error fetching products:", error);
       setProducts(STATIC_PRODUCTS);

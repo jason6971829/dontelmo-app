@@ -2,24 +2,28 @@ import { useState, useMemo } from "react";
 import { useParams, useSearchParams, Link } from "react-router-dom";
 import { SlidersHorizontal, X } from "lucide-react";
 import ProductCard from "../components/ProductCard";
-import { PRODUCTS, CATEGORIES, formatPrice } from "../data/products";
+import { formatPrice } from "../data/products";
+import { useProducts, useCategories } from "../hooks/useSupabase";
 
 export default function Shop() {
   const { category } = useParams();
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q")?.toLowerCase() || "";
 
-  const [priceRange, setPriceRange] = useState([0, 400000]);
+  const [priceRange, setPriceRange] = useState([0, 800000]);
   const [sortBy, setSortBy] = useState("default");
   const [showFilters, setShowFilters] = useState(false);
 
-  const activeCategory = CATEGORIES.find((c) => c.id === category);
+  const { products, loading: loadingProducts } = useProducts();
+  const { categories, loading: loadingCategories } = useCategories();
+
+  const activeCategory = categories.find((c) => c.slug === category || c.id === category);
 
   const filtered = useMemo(() => {
-    let result = PRODUCTS;
+    let result = products;
 
-    if (category) result = result.filter((p) => p.category === category);
-    if (query) result = result.filter((p) => p.name.toLowerCase().includes(query) || p.description.toLowerCase().includes(query));
+    if (category) result = result.filter((p) => p.category === category || p.categories?.slug === category);
+    if (query) result = result.filter((p) => p.name.toLowerCase().includes(query) || p.description?.toLowerCase().includes(query));
     result = result.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
 
     switch (sortBy) {
@@ -28,7 +32,7 @@ export default function Shop() {
       case "name": return [...result].sort((a, b) => a.name.localeCompare(b.name));
       default: return result;
     }
-  }, [category, query, priceRange, sortBy]);
+  }, [products, category, query, priceRange, sortBy]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
@@ -53,7 +57,7 @@ export default function Shop() {
             {activeCategory ? activeCategory.name : query ? `Resultados para "${query}"` : "Tienda"}
           </h1>
           <p className="text-xs text-text-light mt-1">
-            Mostrando {filtered.length} de {PRODUCTS.length} resultados
+            {loadingProducts ? "Cargando..." : `Mostrando ${filtered.length} de ${products.length} resultados`}
           </p>
         </div>
         <button
@@ -81,12 +85,14 @@ export default function Shop() {
             >
               Todas
             </Link>
-            {CATEGORIES.map((cat) => (
+            {categories.map((cat) => (
               <Link
                 key={cat.id}
-                to={`/tienda/${cat.id}`}
+                to={`/tienda/${cat.slug || cat.id}`}
                 onClick={() => setShowFilters(false)}
-                className={`px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${category === cat.id ? "bg-secondary text-primary font-medium" : "text-text-light hover:bg-secondary-light"}`}
+                className={`px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 ${
+                  category === (cat.slug || cat.id) ? "bg-secondary text-primary font-medium" : "text-text-light hover:bg-secondary-light"
+                }`}
               >
                 <span>{cat.emoji}</span> {cat.name}
               </Link>
@@ -98,7 +104,7 @@ export default function Shop() {
             <input
               type="range"
               min={0}
-              max={400000}
+              max={800000}
               step={5000}
               value={priceRange[1]}
               onChange={(e) => setPriceRange([0, Number(e.target.value)])}
@@ -134,7 +140,13 @@ export default function Shop() {
 
         {/* Products Grid */}
         <div className="flex-1">
-          {filtered.length > 0 ? (
+          {loadingProducts ? (
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="bg-secondary-light animate-pulse rounded-2xl h-72" />
+              ))}
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {filtered.map((product) => (
                 <ProductCard key={product.id} product={product} />
