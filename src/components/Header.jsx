@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Menu, X, Search, ShoppingBag, User } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { CATEGORIES } from "../data/products";
+import PandaMascot from "./PandaMascot";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function Header() {
 
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
-          <span className="text-3xl">🐼</span>
+          <PandaMascot expression="wave" size={52} animate={true} />
           <div className="leading-tight">
             <div className="font-heading text-lg sm:text-xl text-primary tracking-[0.12em]">Me Inspiras</div>
             <div className="text-[10px] text-text-light tracking-[0.2em] uppercase">Regalos Bogota</div>

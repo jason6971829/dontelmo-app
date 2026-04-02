@@ -1,5 +1,5 @@
-import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { useMemo, useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -9,15 +9,37 @@ import { Star, ChevronRight } from "lucide-react";
 import ProductCard from "../components/ProductCard";
 import { TESTIMONIALS } from "../data/products";
 import { useProducts, useCategories } from "../hooks/useSupabase";
+import PandaMascot from "../components/PandaMascot";
 
 export default function Home() {
   const { products, loading: loadingProducts } = useProducts();
   const { categories, loading: loadingCategories } = useCategories();
+  const [searchParams] = useSearchParams();
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   const featured = useMemo(() => products.filter((p) => p.featured), [products]);
 
+  useEffect(() => {
+    if (searchParams.get("pedido") === "enviado") {
+      setOrderConfirmed(true);
+      const t = setTimeout(() => setOrderConfirmed(false), 6000);
+      return () => clearTimeout(t);
+    }
+  }, [searchParams]);
+
   return (
     <div>
+      {/* Panda celebración pedido confirmado */}
+      {orderConfirmed && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={() => setOrderConfirmed(false)}>
+          <div className="bg-white rounded-3xl p-10 text-center shadow-2xl max-w-xs mx-4 animate-bounce-in">
+            <PandaMascot expression="celebrate" size={160} animate={true} />
+            <h2 className="font-heading text-xl text-primary tracking-[0.1em] mt-4 mb-2">¡Pedido enviado!</h2>
+            <p className="text-sm text-text-light font-light">Revisa tu WhatsApp, pronto te contactamos 🎁</p>
+          </div>
+        </div>
+      )}
+
       {/* Hero */}
       <section className="relative bg-gradient-to-br from-secondary-light via-secondary to-secondary-light overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 py-16 sm:py-24 flex flex-col lg:flex-row items-center gap-10">
@@ -48,17 +70,22 @@ export default function Home() {
             </div>
           </div>
           <div className="flex-1 relative">
-            <div className="grid grid-cols-2 gap-3 max-w-md mx-auto">
+            <div className="grid grid-cols-2 gap-3 max-w-md mx-auto items-end">
               <img
                 src="/catalog-images/page_011.jpg"
                 alt="Arreglo floral"
                 className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover object-top"
               />
-              <img
-                src="/catalog-images/page_031.jpg"
-                alt="Desayuno sorpresa"
-                className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover object-top mt-8"
-              />
+              <div className="flex flex-col gap-3 mt-8">
+                <img
+                  src="/catalog-images/page_031.jpg"
+                  alt="Desayuno sorpresa"
+                  className="rounded-2xl shadow-lg w-full aspect-[3/4] object-cover object-top"
+                />
+                <div className="flex justify-center">
+                  <PandaMascot expression="gift" size={90} message="¡Te lo envio hoy! 🎁" animate={true} />
+                </div>
+              </div>
             </div>
           </div>
         </div>

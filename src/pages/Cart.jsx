@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import { formatPrice } from "../data/products";
+import PandaMascot from "../components/PandaMascot";
 
 export default function Cart() {
   const { items, updateQty, removeItem, totalPrice } = useCart();
@@ -9,7 +10,9 @@ export default function Cart() {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <ShoppingBag size={60} className="mx-auto text-border mb-6" />
+        <div className="flex justify-center mb-4">
+          <PandaMascot expression="sad" size={130} message="¡No hay nada aquí! 😢" animate={true} />
+        </div>
         <h1 className="font-heading text-xl tracking-[0.12em] mb-3">Tu carrito esta vacio</h1>
         <p className="text-sm text-text-light mb-8 font-light">Agrega productos para comenzar tu pedido</p>
         <Link
