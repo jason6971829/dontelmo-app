@@ -4,6 +4,7 @@ import TopBar from "./TopBar";
 import Header from "./Header";
 import Footer from "./Footer";
 import WhatsAppButton from "./WhatsAppButton";
+import PandaAssistant from "./PandaAssistant";
 
 export default function Layout() {
   const { pathname } = useLocation();
@@ -21,6 +22,7 @@ export default function Layout() {
       </main>
       <Footer />
       <WhatsAppButton />
+      <PandaAssistant />
     </div>
   );
 }
