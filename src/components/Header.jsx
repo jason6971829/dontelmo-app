@@ -23,7 +23,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 h-16 sm:h-20 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 h-20 sm:h-24 flex items-center justify-between">
         {/* Hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
@@ -33,8 +33,8 @@ export default function Header() {
         </button>
 
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
-          <PandaMascot expression="wave" size={52} animate={true} />
+        <Link to="/" className="flex items-center gap-1 absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0">
+          <PandaMascot expression="wave" size={80} animate={true} />
           <div className="leading-tight">
             <div className="font-heading text-lg sm:text-xl text-primary tracking-[0.12em]">Me Inspiras</div>
             <div className="text-[10px] text-text-light tracking-[0.2em] uppercase">Regalos Bogota</div>
