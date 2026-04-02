@@ -1,4 +1,18 @@
-import { useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
+
+const VIDEOS = {
+  wave:      "/panda/Secuencia_de_Emociones_de_Iden_Kling_30__80097.mp4",
+  gift:      "/panda/Secuencia_de_Emociones_de_Iden_Kling_30__80097.mp4",
+  celebrate: "/panda/Secuencia_de_Emociones_de_Iden_Kling_30__80097.mp4",
+  sad:       "/panda/Sequence_of_Frustration_Prompt_Kling_30__61266.mp4",
+};
+
+const ANIMATIONS = {
+  wave:      "panda-bounce",
+  gift:      "panda-float",
+  celebrate: "panda-jump",
+  sad:       "panda-shake",
+};
 
 /**
  * PandaMascot — mascota animada de Me Inspiras 17
@@ -15,25 +29,19 @@ export default function PandaMascot({
   message,
   animate = true,
 }) {
-  const images = {
-    gift:      "/panda/panda-gift.png",
-    wave:      "/panda/panda-wave.png",
-    celebrate: "/panda/panda-celebrate.png",
-    sad:       "/panda/panda-sad.png",
-  };
+  const videoRef = useRef(null);
 
-  // Animaciones CSS por expresión
-  const animations = {
-    wave:      "panda-bounce",
-    gift:      "panda-float",
-    celebrate: "panda-jump",
-    sad:       "panda-shake",
-  };
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [expression]);
 
-  const anim = animate ? animations[expression] : "";
+  const anim = animate ? ANIMATIONS[expression] : "";
 
   return (
-    <div className="panda-mascot-wrapper" style={{ display: "inline-block", position: "relative" }}>
+    <div style={{ display: "inline-block", position: "relative" }}>
       {/* Burbuja de mensaje */}
       {message && (
         <div
@@ -56,7 +64,6 @@ export default function PandaMascot({
           }}
         >
           {message}
-          {/* Triángulo apuntando hacia abajo */}
           <span
             style={{
               position: "absolute",
@@ -73,17 +80,34 @@ export default function PandaMascot({
         </div>
       )}
 
-      {/* Imagen del panda */}
-      <img
-        src={images[expression]}
-        alt={`Panda ${expression}`}
-        width={size}
-        height={size}
+      {/* Video del panda */}
+      <div
         className={anim}
-        style={{ objectFit: "contain", display: "block" }}
-      />
+        style={{
+          width: size,
+          height: size,
+          borderRadius: "50%",
+          overflow: "hidden",
+          background: "transparent",
+        }}
+      >
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            mixBlendMode: "multiply",
+          }}
+        >
+          <source src={VIDEOS[expression]} type="video/mp4" />
+        </video>
+      </div>
 
-      {/* Estilos de animación */}
       <style>{`
         @keyframes pandaBounce {
           0%, 100% { transform: translateY(0px) rotate(0deg); }

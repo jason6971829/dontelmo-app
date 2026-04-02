@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import TopBar from "./TopBar";
 import Header from "./Header";
 import Footer from "./Footer";
-import WhatsAppButton from "./WhatsAppButton";
 import PandaAssistant from "./PandaAssistant";
 
 export default function Layout() {
@@ -21,7 +20,6 @@ export default function Layout() {
         <Outlet />
       </main>
       <Footer />
-      <WhatsAppButton />
       <PandaAssistant />
     </div>
   );
