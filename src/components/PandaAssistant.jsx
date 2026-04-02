@@ -187,24 +187,33 @@ export default function PandaAssistant() {
           </div>
         ) : (
           /* Video panda completo */
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
+          <div
             style={{
               width: "160px",
               height: "160px",
-              objectFit: "contain",
-              mixBlendMode: "multiply",
-              display: "block",
+              borderRadius: "50%",
+              overflow: "hidden",
+              background: "#fef9f7",
               animation: "float 3s ease-in-out infinite",
-              filter: "drop-shadow(0 8px 16px rgba(200,120,130,0.4))",
+              boxShadow: "0 8px 28px rgba(200,120,130,0.35)",
             }}
           >
-            <source src={VIDEOS[mood]} type="video/mp4" />
-          </video>
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            >
+              <source src={VIDEOS[mood]} type="video/mp4" />
+            </video>
+          </div>
         )}
       </div>
 

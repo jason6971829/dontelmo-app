@@ -81,23 +81,32 @@ export default function PandaMascot({
       )}
 
       {/* Video del panda */}
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        playsInline
+      <div
         className={anim}
         style={{
           width: size,
           height: size,
-          objectFit: "contain",
-          mixBlendMode: "multiply",
-          display: "block",
+          borderRadius: "50%",
+          overflow: "hidden",
+          background: "#fef9f7",
         }}
       >
-        <source src={VIDEOS[expression]} type="video/mp4" />
-      </video>
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            display: "block",
+          }}
+        >
+          <source src={VIDEOS[expression]} type="video/mp4" />
+        </video>
+      </div>
 
       <style>{`
         @keyframes pandaBounce {
