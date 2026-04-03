@@ -5,7 +5,28 @@
       "mcp__Claude_Preview__preview_start",
       "Bash(npx vite:*)",
       "Bash(npm ls:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(pip install:*)",
+      "Bash(where python3:*)",
+      "Bash(where python:*)",
+      "Bash(where py:*)",
+      "Read(//usr/**)",
+      "Read(//usr/local/**)",
+      "Read(//c/Users/jjson/AppData/Local/Programs/**)",
+      "Read(//c/Users/jjson/AppData/Local//**)",
+      "Bash(where python3.exe)",
+      "Bash(where python.exe)",
+      "Bash(ls /c/Python*)",
+      "Read(//c//**)",
+      "Bash(npm --version)",
+      "Bash(npm list:*)",
+      "Bash(node -e \"const pdfjsLib = require\\(''pdfjs-dist/legacy/build/pdf.js''\\); console.log\\(''pdfjs version:'', pdfjsLib.version\\);\")",
+      "Bash(node -e \":*)",
+      "Bash(node scripts/extract-pdf-images.mjs)",
+      "mcp__bc426b86-7e32-4cde-a4e4-af331922a8a6__create-design-from-candidate",
+      "Read(//c/Users/jjson/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/ff2902a3-2739-4f94-ba14-0412e066b926/0b01e092-6c4f-4af9-8a5d-14841b3abbae/skills/web-artifacts-builder/**)",
+      "Bash(npm create:*)",
+      "Bash(gh run:*)"
     ]
   }
 }
